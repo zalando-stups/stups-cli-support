@@ -1,9 +1,10 @@
 
 import click
+import dns.resolver
 import os
 import requests
 import yaml
-from clickclick import Action
+from clickclick import Action, info
 
 
 def get_path(section):
@@ -35,10 +36,21 @@ def store_config(config, section):
 def configure():
     while True:
         errors = None
+        autoconfigs = {}
         urls = {}
         domain = click.prompt('Please enter your STUPS domain (e.g. "stups.example.org")')
 
-        # dns.resolver.query(.., 'TXT')
+        for component in ('mai', 'zign'):
+
+            with Action('Trying to autoconfigure {}..'.format(component)) as act:
+                try:
+                    answer = dns.resolver.query('_{}._autoconfig.{}'.format(component, domain), 'TXT')
+                    for rdata in answer.rrset.items:
+                        for string in rdata.strings:
+                            autoconfigs[component] = yaml.safe_load(string)
+                except:
+                    act.error('ERROR')
+                    errors = True
 
         for component in ('pierone', 'even'):
             url = 'https://{}.{}'.format(component, domain)
@@ -56,6 +68,12 @@ def configure():
                 store_config({'url': urls['pierone']}, 'pierone')
             with Action('Writing config for Più..'):
                 store_config({'even_url': urls['even']}, 'piu')
+            with Action('Writing config for Zign..'):
+                store_config({'url': autoconfigs.get('zign', {}).get('token_service_url')}, 'zign')
+
+            info('Now use "mai create .." to configure your AWS profile(s).')
+            info('SAML identity provider URL: {}'.format(autoconfigs.get('mai', {}).get('saml_identity_provider_url')))
+            info('SAML username pattern:      {}'.format(autoconfigs.get('mai', {}).get('saml_user_pattern')))
 
         if not errors:
             break
