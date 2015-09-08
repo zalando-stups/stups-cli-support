@@ -38,7 +38,11 @@ def configure():
         errors = None
         autoconfigs = {}
         urls = {}
-        domain = click.prompt('Please enter your STUPS domain (e.g. "stups.example.org")')
+
+        existing_config = load_config('stups')
+        domain = existing_config.get('domain')
+
+        domain = click.prompt('Please enter your STUPS domain (e.g. "stups.example.org")', default=domain)
 
         for component in ('mai', 'zign'):
 
@@ -64,6 +68,8 @@ def configure():
             urls[component] = url
 
         if not errors:
+            with Action('Writing global config..'):
+                store_config({'domain': domain}, 'stups')
             with Action('Writing config for Pier One..'):
                 store_config({'url': urls['pierone']}, 'pierone')
             with Action('Writing config for Più..'):
