@@ -1,5 +1,6 @@
 
 import click
+import dns.exception
 import dns.resolver
 import os
 import requests
@@ -34,16 +35,29 @@ def store_config(config, section):
         yaml.dump(config, fd)
 
 
-def configure():
+def is_valid_domain(domain):
+    try:
+        dns.resolver.query(domain, raise_on_no_answer=False)
+        return True
+    except:
+        return False
+
+
+def configure(default_domain=None):
     while True:
         errors = None
         autoconfigs = {}
         urls = {}
 
         existing_config = load_config('stups')
-        domain = existing_config.get('domain')
+        domain = existing_config.get('domain') or default_domain
 
-        domain = click.prompt('Please enter your STUPS domain (e.g. "stups.example.org")', default=domain)
+        while True:
+            domain = click.prompt('Please enter your STUPS domain (e.g. "stups.example.org")', default=domain)
+            if is_valid_domain(domain):
+                break
+            else:
+                info('The entered domain is not valid. Please try again.')
 
         for component in ('mai', 'zign'):
 
@@ -53,6 +67,9 @@ def configure():
                     for rdata in answer.rrset.items:
                         for string in rdata.strings:
                             autoconfigs[component] = yaml.safe_load(string)
+                except dns.exception.DNSException as e:
+                    act.error(str(e.__class__.__name__))
+                    errors = True
                 except:
                     act.error('ERROR')
                     errors = True
@@ -86,5 +103,14 @@ def configure():
             if returncode == 0:
                 info('You can now use "mai login .." to get temporary AWS credentials for your AWS account(s).')
 
-        if not errors:
+        if errors:
+            info('Automatic configuration failed. Please check the entered STUPS domain.')
+            parts = domain.split('.')
+            if len(parts) <= 2:
+                domain = '.'.join(['stups'] + parts)
+                info('The entered domain looks too short. Did you mean {}?'.format(domain))
+            else:
+                domain = '.'.join(['stups'] + parts[1:])
+                info('The entered domain might be a team domain. Did you mean {}?'.format(domain))
+        else:
             break
