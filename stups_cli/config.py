@@ -32,12 +32,13 @@ def store_config(config, section):
         yaml.dump(config, fd)
 
 
-
 def configure():
     while True:
         errors = None
         urls = {}
         domain = click.prompt('Please enter your STUPS domain (e.g. "stups.example.org")')
+
+        # dns.resolver.query(.., 'TXT')
 
         for component in ('pierone', 'even'):
             url = 'https://{}.{}'.format(component, domain)
@@ -58,5 +59,3 @@ def configure():
 
         if not errors:
             break
-
-
