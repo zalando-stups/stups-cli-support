@@ -1,2 +1,4 @@
 clickclick>=0.11
 PyYAML
+dnspython3
+requests
