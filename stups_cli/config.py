@@ -43,14 +43,15 @@ def is_valid_domain(domain):
         return False
 
 
-def configure(default_domain=None):
+def configure(preselected_domain=None):
     while True:
         errors = None
         autoconfigs = {}
         urls = {}
 
         existing_config = load_config('stups')
-        domain = existing_config.get('domain') or default_domain
+        # first use the provided domain
+        domain = preselected_domain or existing_config.get('domain')
 
         while True:
             domain = click.prompt('Please enter your STUPS domain (e.g. "stups.example.org")', default=domain)
