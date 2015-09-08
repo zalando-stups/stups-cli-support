@@ -1,3 +1,4 @@
 import stups_cli.config
 
-stups_cli.config.configure()
+if __name__ == '__main__':
+    stups_cli.config.configure()

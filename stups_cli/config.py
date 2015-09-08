@@ -3,6 +3,7 @@ import click
 import dns.resolver
 import os
 import requests
+import subprocess
 import yaml
 from clickclick import Action, info
 
@@ -77,9 +78,13 @@ def configure():
             with Action('Writing config for Zign..'):
                 store_config({'url': autoconfigs.get('zign', {}).get('token_service_url')}, 'zign')
 
-            info('Now use "mai create .." to configure your AWS profile(s).')
-            info('SAML identity provider URL: {}'.format(autoconfigs.get('mai', {}).get('saml_identity_provider_url')))
-            info('SAML username pattern:      {}'.format(autoconfigs.get('mai', {}).get('saml_user_pattern')))
+            info('Now running "mai create-all" to configure your AWS profile(s)..')
+            user_pattern = autoconfigs.get('mai', {}).get('saml_user_pattern')
+            identity_provider_url = autoconfigs.get('mai', {}).get('saml_identity_provider_url')
+            info('Please use the following pattern for your SAML username: {}'.format(user_pattern))
+            returncode = subprocess.call(['mai', 'create-all', '--url', identity_provider_url])
+            if returncode == 0:
+                info('You can now use "mai login .." to get temporary AWS credentials for your AWS account(s).')
 
         if not errors:
             break
