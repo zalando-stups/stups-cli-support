@@ -75,7 +75,7 @@ def configure(preselected_domain=None):
                     act.error('ERROR')
                     errors = True
 
-        for component in ('pierone', 'even', 'fullstop'):
+        for component in ('pierone', 'even', 'fullstop', 'kio'):
             url = 'https://{}.{}'.format(component, domain)
             with Action('Checking {}..'.format(url)) as act:
                 try:
@@ -95,6 +95,8 @@ def configure(preselected_domain=None):
                 store_config({'even_url': urls['even']}, 'piu')
             with Action('Writing config for Fullstop..'):
                 store_config({'url': urls['fullstop']}, 'fullstop')
+            with Action('Writing config for Kio..'):
+                store_config({'url': urls['kio']}, 'kio')
             with Action('Writing config for Zign..'):
                 store_config({'url': autoconfigs.get('zign', {}).get('token_service_url')}, 'zign')
 
