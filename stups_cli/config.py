@@ -17,13 +17,22 @@ def get_path(section):
 
 
 def load_config(section):
+    '''Get configuration for given section/project
+
+    Tries to load YAML configuration file and also considers environment variables'''
     path = get_path(section)
     try:
         with open(path, 'rb') as fd:
             config = yaml.safe_load(fd)
     except:
         config = None
-    return config or {}
+    config = config or {}
+    env_prefix = '{}_'.format(section.upper().replace('-', '_'))
+    for key, val in os.environ.items():
+        if key.startswith(env_prefix):
+            config_key = key[len(env_prefix):].lower()
+            config[config_key] = val
+    return config
 
 
 def store_config(config, section):
