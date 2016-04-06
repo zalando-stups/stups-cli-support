@@ -94,8 +94,11 @@ def configure(preselected_domain=None):
 
             urls[component] = url
 
-        username = existing_config.get('user') or os.getenv('USER')
-        username = click.prompt('Please enter your OAuth username if it differs from $USER (e.g. "jdoe")', default=username)
+        token_service_url = autoconfigs.get('zign', {}).get('token_service_url')
+
+        if token_service_url:
+            username = existing_config.get('user') or os.getenv('USER')
+            username = click.prompt('Please enter your OAuth username if it differs from $USER (e.g. "jdoe")', default=username)
 
         if not errors:
             with Action('Writing global config..'):
@@ -109,7 +112,7 @@ def configure(preselected_domain=None):
             with Action('Writing config for Kio..'):
                 store_config({'url': urls['kio']}, 'kio')
             with Action('Writing config for Zign..'):
-                store_config({'url': autoconfigs.get('zign', {}).get('token_service_url'),'user': username}, 'zign')
+                store_config({'url': token_service_url, 'user': username}, 'zign')
 
             info('Now running "mai create-all" to configure your AWS profile(s)..')
             user_pattern = autoconfigs.get('mai', {}).get('saml_user_pattern')
