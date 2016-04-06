@@ -21,6 +21,14 @@ Helper library for all STUPS command line tools.
     $ sudo pip3 install --upgrade stups
     $ stups configure
 
+Local Development
+=================
+
+You can test the `configure` command with:
+
+.. code-block:: bash
+
+    $ python3 -m stups_cli
 
 Releasing
 =========
