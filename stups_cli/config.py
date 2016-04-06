@@ -94,8 +94,8 @@ def configure(preselected_domain=None):
 
             urls[component] = url
 
-        username = existing_config.get('user') or os.path.expandvars('$USER')
-        username = click.prompt('Please enter your username if differs from $USER (e.g. "jdoe")', default=username)
+        username = existing_config.get('user') or os.getenv('USER')
+        username = click.prompt('Please enter your OAuth username if it differs from $USER (e.g. "jdoe")', default=username)
 
         if not errors:
             with Action('Writing global config..'):
