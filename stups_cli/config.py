@@ -39,8 +39,11 @@ def store_config(config, section):
     dir_path = os.path.dirname(path)
     if dir_path:
         os.makedirs(dir_path, exist_ok=True)
-    with open(path, 'w') as fd:
-        yaml.dump(config, fd)
+    try:
+        with open(path, 'w') as fd:
+            yaml.dump(config, fd)
+    except PermissionError:
+        pass
 
 
 def is_valid_domain(domain):
