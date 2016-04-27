@@ -41,8 +41,10 @@ def store_config(config, section):
         os.makedirs(dir_path, exist_ok=True)
     try:
         with open(path, 'w') as fd:
-            yaml.dump(config, fd)
+            yaml.safe_dump(config, fd)
     except PermissionError:
+        # we ignore permission errors here as users might make their config file readonly
+        # to prevent corrupt files when running multiple processes
         pass
 
 
