@@ -39,8 +39,13 @@ def store_config(config, section):
     dir_path = os.path.dirname(path)
     if dir_path:
         os.makedirs(dir_path, exist_ok=True)
-    with open(path, 'w') as fd:
-        yaml.dump(config, fd)
+    try:
+        with open(path, 'w') as fd:
+            yaml.safe_dump(config, fd)
+    except PermissionError:
+        # we ignore permission errors here as users might make their config file readonly
+        # to prevent corrupt files when running multiple processes
+        pass
 
 
 def is_valid_domain(domain):
