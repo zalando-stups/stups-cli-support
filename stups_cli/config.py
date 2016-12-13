@@ -73,14 +73,16 @@ def configure(preselected_domain=None):
             else:
                 info('The entered domain is not valid. Please try again.')
 
-        for component in ('mai', 'zign'):
+        for component in ('mai', 'zign', 'zalando-token-cli'):
 
             with Action('Trying to autoconfigure {}..'.format(component)) as act:
                 try:
                     answer = dns.resolver.query('_{}._autoconfig.{}'.format(component, domain), 'TXT')
+                    txt_strings = []
                     for rdata in answer.rrset.items:
                         for string in rdata.strings:
-                            autoconfigs[component] = yaml.safe_load(string)
+                            txt_strings.append(string.decode('utf-8'))
+                    autoconfigs[component] = yaml.safe_load(''.join(txt_strings))
                 except dns.exception.DNSException as e:
                     act.error(str(e.__class__.__name__))
                     errors = True
@@ -119,6 +121,9 @@ def configure(preselected_domain=None):
                 store_config({'url': urls['kio']}, 'kio')
             with Action('Writing config for Zign..'):
                 store_config({'url': token_service_url, 'user': username}, 'zign')
+            if autoconfigs.get('zalando-token-cli'):
+                with Action('Writing config for Zalando Token CLI..'):
+                    store_config(autoconfigs['zalando-token-cli'], 'zalando-token-cli')
 
             info('Now running "mai create-all" to configure your AWS profile(s)..')
             user_pattern = autoconfigs.get('mai', {}).get('saml_user_pattern')
