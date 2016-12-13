@@ -78,11 +78,9 @@ def configure(preselected_domain=None):
             with Action('Trying to autoconfigure {}..'.format(component)) as act:
                 try:
                     answer = dns.resolver.query('_{}._autoconfig.{}'.format(component, domain), 'TXT')
-                    txt_strings = []
                     for rdata in answer.rrset.items:
                         for string in rdata.strings:
-                            txt_strings.append(string.decode('utf-8'))
-                    autoconfigs[component] = yaml.safe_load(''.join(txt_strings))
+                            autoconfigs[component] = yaml.safe_load(string)
                 except dns.exception.DNSException as e:
                     act.error(str(e.__class__.__name__))
                     errors = True
