@@ -73,7 +73,7 @@ def configure(preselected_domain=None):
             else:
                 info('The entered domain is not valid. Please try again.')
 
-        for component in ('mai', 'zign', 'zalando-token-cli'):
+        for component in ('mai', 'zign', 'zalando-token-cli', 'zalando-aws-cli'):
 
             with Action('Trying to autoconfigure {}..'.format(component)) as act:
                 try:
@@ -122,6 +122,9 @@ def configure(preselected_domain=None):
             if autoconfigs.get('zalando-token-cli'):
                 with Action('Writing config for Zalando Token CLI..'):
                     store_config(autoconfigs['zalando-token-cli'], 'zalando-token-cli')
+            if autoconfigs.get('zalando-aws-cli'):
+                with Action('Writing config for Zalando AWS CLI..'):
+                    store_config(autoconfigs['zalando-aws-cli'], 'zalando-aws-cli')
 
             info('Now running "mai create-all" to configure your AWS profile(s)..')
             user_pattern = autoconfigs.get('mai', {}).get('saml_user_pattern')
