@@ -126,13 +126,14 @@ def configure(preselected_domain=None):
                 with Action('Writing config for Zalando AWS CLI..'):
                     store_config(autoconfigs['zalando-aws-cli'], 'zalando-aws-cli')
 
-            info('Now running "mai create-all" to configure your AWS profile(s)..')
             user_pattern = autoconfigs.get('mai', {}).get('saml_user_pattern')
-            identity_provider_url = autoconfigs.get('mai', {}).get('saml_identity_provider_url')
-            info('Please use the following pattern for your SAML username: {}'.format(user_pattern))
-            returncode = subprocess.call(['mai', 'create-all', '--url', identity_provider_url])
-            if returncode == 0:
-                info('You can now use "mai login .." to get temporary AWS credentials for your AWS account(s).')
+            if user_pattern:
+                info('Now running "mai create-all" to configure your AWS profile(s)..')
+                identity_provider_url = autoconfigs.get('mai', {}).get('saml_identity_provider_url')
+                info('Please use the following pattern for your SAML username: {}'.format(user_pattern))
+                returncode = subprocess.call(['mai', 'create-all', '--url', identity_provider_url])
+                if returncode == 0:
+                    info('You can now use "mai login .." to get temporary AWS credentials for your AWS account(s).')
 
         if errors:
             info('Automatic configuration failed. Please check the entered STUPS domain.')
