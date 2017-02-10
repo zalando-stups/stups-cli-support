@@ -73,7 +73,7 @@ def configure(preselected_domain=None):
             else:
                 info('The entered domain is not valid. Please try again.')
 
-        for component in ('mai', 'zign', 'zalando-token-cli', 'zalando-aws-cli'):
+        for component in ('mai', 'zign', 'zalando-token-cli', 'zalando-aws-cli', 'zalando-kubectl'):
 
             with Action('Trying to autoconfigure {}..'.format(component)) as act:
                 try:
@@ -84,8 +84,8 @@ def configure(preselected_domain=None):
                 except dns.exception.DNSException as e:
                     act.error(str(e.__class__.__name__))
                     errors = True
-                except:
-                    act.error('ERROR')
+                except Exception as e:
+                    act.error('ERROR: {}'.format(e))
                     errors = True
 
         for component in ('pierone', 'even', 'fullstop', 'kio'):
@@ -125,6 +125,9 @@ def configure(preselected_domain=None):
             if autoconfigs.get('zalando-aws-cli'):
                 with Action('Writing config for Zalando AWS CLI..'):
                     store_config(autoconfigs['zalando-aws-cli'], 'zalando-aws-cli')
+            if autoconfigs.get('zalando-kubectl'):
+                with Action('Writing config for Zalando Kubectl..'):
+                    store_config(autoconfigs['zalando-kubectl'], 'zalando-kubectl')
 
             user_pattern = autoconfigs.get('mai', {}).get('saml_user_pattern')
             if user_pattern:
