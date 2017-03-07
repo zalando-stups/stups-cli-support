@@ -18,4 +18,3 @@ def test_load_config_with_environment():
     os.environ['EXAMPLE_PROJ_MY_KEY'] = 'some value'
     cfg = stups_cli.config.load_config('example-proj')
     assert cfg == {'my_key': 'some value'}
-

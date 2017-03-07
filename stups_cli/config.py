@@ -73,7 +73,8 @@ def configure(preselected_domain=None):
             else:
                 info('The entered domain is not valid. Please try again.')
 
-        for component in ('mai', 'zign', 'zalando-token-cli', 'zalando-aws-cli', 'zalando-kubectl', 'zalando-deploy-cli'):
+        for component in ('mai', 'zign', 'zalando-token-cli',
+                          'zalando-aws-cli', 'zalando-kubectl', 'zalando-deploy-cli'):
 
             with Action('Trying to autoconfigure {}..'.format(component)) as act:
                 try:
