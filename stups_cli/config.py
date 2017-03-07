@@ -73,7 +73,7 @@ def configure(preselected_domain=None):
             else:
                 info('The entered domain is not valid. Please try again.')
 
-        for component in ('mai', 'zign', 'zalando-token-cli', 'zalando-aws-cli', 'zalando-kubectl'):
+        for component in ('mai', 'zign', 'zalando-token-cli', 'zalando-aws-cli', 'zalando-kubectl', 'zalando-deploy-cli'):
 
             with Action('Trying to autoconfigure {}..'.format(component)) as act:
                 try:
@@ -128,6 +128,9 @@ def configure(preselected_domain=None):
             if autoconfigs.get('zalando-kubectl'):
                 with Action('Writing config for Zalando Kubectl..'):
                     store_config(autoconfigs['zalando-kubectl'], 'zalando-kubectl')
+            if autoconfigs.get('zalando-deploy-cli'):
+                with Action('Writing config for Zalando Deploy CLI..'):
+                    store_config(autoconfigs['zalando-deploy-cli'], 'zalando-deploy-cli')
 
             user_pattern = autoconfigs.get('mai', {}).get('saml_user_pattern')
             if user_pattern:
