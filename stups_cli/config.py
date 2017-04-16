@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import click
 import dns.exception
 import dns.resolver
@@ -16,9 +18,9 @@ def get_path(section):
 
 
 def load_config(section):
-    '''Get configuration for given section/project
+    """Get configuration for given section/project
 
-    Tries to load YAML configuration file and also considers environment variables'''
+    Tries to load YAML configuration file and also considers environment variables"""
     path = get_path(section)
     try:
         with open(path, 'rb') as fd:
@@ -42,7 +44,7 @@ def store_config(config, section):
     try:
         with open(path, 'w') as fd:
             yaml.safe_dump(config, fd)
-    except PermissionError:
+    except IOError:
         # we ignore permission errors here as users might make their config file readonly
         # to prevent corrupt files when running multiple processes
         pass
@@ -112,7 +114,7 @@ def configure(preselected_domain=None):
                 store_config({'domain': domain}, 'stups')
             with Action('Writing config for Pier One..'):
                 store_config({'url': urls['pierone']}, 'pierone')
-            with Action('Writing config for Più..'):
+            with Action(u'Writing config for Più..'):
                 store_config({'even_url': urls['even']}, 'piu')
             with Action('Writing config for Fullstop..'):
                 store_config({'url': urls['fullstop']}, 'fullstop')
