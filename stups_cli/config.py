@@ -100,13 +100,6 @@ def configure(preselected_domain=None):
 
             urls[component] = url
 
-        token_service_url = autoconfigs.get('zign', {}).get('token_service_url')
-
-        if token_service_url:
-            username = existing_config.get('user') or os.getenv('USER')
-            username = click.prompt('Please enter your OAuth username if it differs from $USER (e.g. "jdoe")',
-                                    default=username)
-
         if not errors:
             with Action('Writing global config..'):
                 store_config({'domain': domain}, 'stups')
@@ -118,8 +111,6 @@ def configure(preselected_domain=None):
                 store_config({'url': urls['fullstop']}, 'fullstop')
             with Action('Writing config for Kio..'):
                 store_config({'url': urls['kio']}, 'kio')
-            with Action('Writing config for Zign..'):
-                store_config({'url': token_service_url, 'user': username}, 'zign')
             if autoconfigs.get('zalando-token-cli'):
                 with Action('Writing config for Zalando Token CLI..'):
                     store_config(autoconfigs['zalando-token-cli'], 'zalando-token-cli')
