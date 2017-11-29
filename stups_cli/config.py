@@ -3,7 +3,6 @@ import dns.exception
 import dns.resolver
 import os
 import requests
-import subprocess
 import yaml
 from clickclick import Action, info
 
@@ -73,8 +72,7 @@ def configure(preselected_domain=None):
             else:
                 info('The entered domain is not valid. Please try again.')
 
-        for component in ('mai', 'zign', 'zalando-token-cli',
-                          'zalando-aws-cli', 'zalando-kubectl', 'zalando-deploy-cli'):
+        for component in ('zalando-token-cli', 'zalando-aws-cli', 'zalando-kubectl', 'zalando-deploy-cli'):
 
             with Action('Trying to autoconfigure {}..'.format(component)) as act:
                 try:
@@ -123,15 +121,6 @@ def configure(preselected_domain=None):
             if autoconfigs.get('zalando-deploy-cli'):
                 with Action('Writing config for Zalando Deploy CLI..'):
                     store_config(autoconfigs['zalando-deploy-cli'], 'zalando-deploy-cli')
-
-            user_pattern = autoconfigs.get('mai', {}).get('saml_user_pattern')
-            if user_pattern:
-                info('Now running "mai create-all" to configure your AWS profile(s)..')
-                identity_provider_url = autoconfigs.get('mai', {}).get('saml_identity_provider_url')
-                info('Please use the following pattern for your SAML username: {}'.format(user_pattern))
-                returncode = subprocess.call(['mai', 'create-all', '--url', identity_provider_url])
-                if returncode == 0:
-                    info('You can now use "mai login .." to get temporary AWS credentials for your AWS account(s).')
 
         if errors:
             info('Automatic configuration failed. Please check the entered STUPS domain.')
