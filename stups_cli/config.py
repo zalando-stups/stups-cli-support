@@ -70,7 +70,7 @@ def configure(preselected_domain=None):
                 break
             else:
                 info('The entered domain is not valid. Please try again.')
-            domain = click.prompt('Please enter your  STUPS domain (e.g. "stups.example.org")', default=domain)
+            domain = click.prompt('Please enter your STUPS domain (e.g. "stups.example.org")', default=domain)
 
         for component in ('zalando-token-cli', 'zalando-aws-cli', 'zalando-kubectl', 'zalando-deploy-cli'):
 
