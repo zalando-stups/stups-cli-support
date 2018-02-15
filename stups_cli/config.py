@@ -66,11 +66,12 @@ def configure(preselected_domain=None):
         domain = preselected_domain or existing_config.get('domain')
 
         while True:
+            if domain:
+                if is_valid_domain(domain):
+                    break
+                else:
+                    info('The entered domain is not valid. Please try again.')
             domain = click.prompt('Please enter your STUPS domain (e.g. "stups.example.org")', default=domain)
-            if is_valid_domain(domain):
-                break
-            else:
-                info('The entered domain is not valid. Please try again.')
 
         for component in ('zalando-token-cli', 'zalando-aws-cli', 'zalando-kubectl', 'zalando-deploy-cli'):
 
