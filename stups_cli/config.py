@@ -88,7 +88,7 @@ def configure(preselected_domain=None):
                     act.error('ERROR: {}'.format(e))
                     errors = True
 
-        for component in ('pierone', 'even', 'fullstop', 'kio'):
+        for component in ('pierone', 'even', 'kio'):
             url = 'https://{}.{}'.format(component, domain)
             with Action('Checking {}..'.format(url)) as act:
                 try:
@@ -106,8 +106,6 @@ def configure(preselected_domain=None):
                 store_config({'url': urls['pierone']}, 'pierone')
             with Action('Writing config for Più..'):
                 store_config({'even_url': urls['even']}, 'piu')
-            with Action('Writing config for Fullstop..'):
-                store_config({'url': urls['fullstop']}, 'fullstop')
             with Action('Writing config for Kio..'):
                 store_config({'url': urls['kio']}, 'kio')
             if autoconfigs.get('zalando-token-cli'):
