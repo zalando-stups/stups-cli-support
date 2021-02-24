@@ -13,6 +13,7 @@ import setuptools
 from setuptools.command.test import test as TestCommand
 from setuptools import setup
 
+# TODO: we probably don't want to support anything lower than Python 3.6 going forward
 if sys.version_info < (3, 4, 0):
     sys.stderr.write('FATAL: STUPS needs to be run with Python 3.4+\n')
     sys.exit(1)
@@ -34,7 +35,7 @@ DESCRIPTION = 'STUPS CLI support library'
 LICENSE = 'Apache License 2.0'
 URL = 'https://github.com/zalando-stups/stups-cli-support'
 AUTHOR = 'Henning Jacobs'
-EMAIL = 'henning.jacobs@zalando.de'
+EMAIL = 'henning@zalando.de'
 KEYWORDS = 'stups zalando cli'
 
 COVERAGE_XML = True
@@ -44,14 +45,16 @@ JUNIT_XML = True
 # Add here all kinds of additional classifiers as defined under
 # https://pypi.python.org/pypi?%3Aaction=list_classifiers
 CLASSIFIERS = [
-    'Development Status :: 4 - Beta',
+    'Development Status :: 5 - Production/Stable',
     'Environment :: Console',
     'Intended Audience :: Developers',
     'Intended Audience :: System Administrators',
     'License :: OSI Approved :: Apache Software License',
     'Operating System :: POSIX :: Linux',
     'Programming Language :: Python',
-    'Programming Language :: Python :: 3.4',
+    'Programming Language :: Python :: 3.7',
+    'Programming Language :: Python :: 3.8',
+    'Programming Language :: Python :: 3.9',
     'Programming Language :: Python :: Implementation :: CPython',
 ]
 
