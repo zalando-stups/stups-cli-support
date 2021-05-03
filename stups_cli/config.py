@@ -88,7 +88,7 @@ def configure(preselected_domain=None):
                     act.error('ERROR: {}'.format(e))
                     errors = True
 
-        for component in ('pierone', 'even', 'kio'):
+        for component in ('pierone', 'kio'):
             url = 'https://{}.{}'.format(component, domain)
             with Action('Checking {}..'.format(url)) as act:
                 try:
@@ -104,8 +104,6 @@ def configure(preselected_domain=None):
                 store_config({'domain': domain}, 'stups')
             with Action('Writing config for Pier One..'):
                 store_config({'url': urls['pierone']}, 'pierone')
-            with Action('Writing config for Più..'):
-                store_config({'even_url': urls['even']}, 'piu')
             with Action('Writing config for Kio..'):
                 store_config({'url': urls['kio']}, 'kio')
             if autoconfigs.get('zalando-token-cli'):
@@ -117,9 +115,6 @@ def configure(preselected_domain=None):
             if autoconfigs.get('zalando-kubectl'):
                 with Action('Writing config for Zalando Kubectl..'):
                     store_config(autoconfigs['zalando-kubectl'], 'zalando-kubectl')
-            if autoconfigs.get('zalando-deploy-cli'):
-                with Action('Writing config for Zalando Deploy CLI..'):
-                    store_config(autoconfigs['zalando-deploy-cli'], 'zalando-deploy-cli')
 
         if errors:
             info('Automatic configuration failed. Please check the entered STUPS domain.')
