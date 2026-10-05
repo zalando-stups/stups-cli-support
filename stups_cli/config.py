@@ -88,22 +88,19 @@ def configure(preselected_domain=None):
                     act.error('ERROR: {}'.format(e))
                     errors = True
 
-        for component in ('pierone', 'kio'):
-            url = 'https://{}.{}'.format(component, domain)
-            with Action('Checking {}..'.format(url)) as act:
-                try:
-                    requests.get(url, timeout=5, allow_redirects=False)
-                except:
-                    act.error('ERROR')
-                    errors = True
+        kio_url = 'https://kio.{}'.format(component, domain)
+        with Action('Checking {}..'.format(url)) as act:
+            try:
+                requests.get(url, timeout=5, allow_redirects=False)
+            except:
+                act.error('ERROR')
+                errors = True
 
-            urls[component] = url
+            urls['kio'] = kio_url
 
         if not errors:
             with Action('Writing global config..'):
                 store_config({'domain': domain}, 'stups')
-            with Action('Writing config for Pier One..'):
-                store_config({'url': urls['pierone']}, 'pierone')
             with Action('Writing config for Kio..'):
                 store_config({'url': urls['kio']}, 'kio')
             if autoconfigs.get('zalando-token-cli'):
