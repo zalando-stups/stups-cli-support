@@ -88,7 +88,7 @@ def configure(preselected_domain=None):
                     act.error('ERROR: {}'.format(e))
                     errors = True
 
-        kio_url = 'https://kio.{}'.format(component, domain)
+        kio_url = 'https://kio.{}'.format(domain)
         with Action('Checking {}..'.format(url)) as act:
             try:
                 requests.get(url, timeout=5, allow_redirects=False)
