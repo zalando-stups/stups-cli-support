@@ -89,9 +89,9 @@ def configure(preselected_domain=None):
                     errors = True
 
         kio_url = 'https://kio.{}'.format(domain)
-        with Action('Checking {}..'.format(url)) as act:
+        with Action('Checking {}..'.format(kio_url)) as act:
             try:
-                requests.get(url, timeout=5, allow_redirects=False)
+                requests.get(kio_url, timeout=5, allow_redirects=False)
             except:
                 act.error('ERROR')
                 errors = True
